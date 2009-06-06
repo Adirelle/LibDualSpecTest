@@ -7,7 +7,7 @@ local ace3 = CreateFrame("Frame", NAME)
 local db
 
 local spy = setmetatable({}, {__index = function(t,k)
-	local prefix = NAME..':'..k..'():'
+	local prefix = NAME..'-Ace3:'..k..'():'
 	local f = function(_, ...)
 		print(prefix, ...)
 	end
@@ -37,8 +37,6 @@ ace3:SetScript('OnEvent', function(self, event, name)
 	
 	LibDoppelganger:EnhanceAceDB3(db)
 	LibDoppelganger:EnhanceAceDBOptions3(options, db)
-	
-	print(NAME, 'loaded')
 end)
 
 -- Ace2 test
@@ -69,21 +67,11 @@ ace2.options = {
 }
 
 function ace2:OnInitialize()
-	LibDoppelganger:EnhanceAceDB2(self)
+	LibDoppelganger:EnhanceAceDB2(self)	
+	LibDoppelganger:EnhanceAceDBOptions2(self.options, self)		
 	
-	local pOptions = AceLibrary('AceDB-2.0'):GetAceOptionsDataTable(self) 
-	self.pOptions = pOptions 
-	LibDoppelganger:EnhanceAceDBOptions2(pOptions, self)		
-	for k,v in pairs(pOptions) do
-		self.options[k] = v
-	end
-	
-	Waterfall:Register(NAME, 'aceOptions', self.options, 'title', NAME)
-	self:RegisterChatCommand({'/dpgt'}, self.options) 
-end
-
-function ace2:OnEnable()
---	self:PrintLiteral(self.pOptions.profile.args)
+	self:RegisterChatCommand('/dpgt', self.options) 
+	Waterfall:Register(NAME, 'aceOptions', self.options, 'title', NAME)	
 end
 
 function ace2:OnProfileDisable(...)
