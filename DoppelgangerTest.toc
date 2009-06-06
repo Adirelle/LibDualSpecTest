@@ -1,0 +1,9 @@
+## Interface: 30100
+
+## Title: DoppelgangerTest
+## Notes: LibDoppelgangerTest addon.
+## Author: Adirelle
+## SavedVariables: DoppelgangerTestDB
+## RequiredDeps: Ace3, LibDoppelganger-1.0
+
+DoppelgangerTest.lua
