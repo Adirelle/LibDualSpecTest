@@ -1,6 +1,9 @@
 
+local LibDoppelganger = LibStub('LibDoppelganger-1.0')
+
+-- Ace3 test
 local NAME = 'DoppelgangerTest'
-local mod = CreateFrame("Frame", NAME)
+local ace3 = CreateFrame("Frame", NAME)
 local db
 
 local spy = setmetatable({}, {__index = function(t,k)
@@ -12,12 +15,12 @@ local spy = setmetatable({}, {__index = function(t,k)
 	return f
 end})
 
-mod:RegisterEvent('ADDON_LOADED')
-mod:SetScript('OnEvent', function(self, event, name)
+ace3:RegisterEvent('ADDON_LOADED')
+ace3:SetScript('OnEvent', function(self, event, name)
 	if name:lower() ~= NAME:lower() then return end
 	self:UnregisterEvent('ADDON_LOADED')
 	
-	db = LibStub('AceDB-3.0'):New('DoppelgangerTestDB')
+	db = LibStub('AceDB-3.0'):New('DoppelgangerTestAce3DB')
 	DoppelgangerTest.db = db
 	db.RegisterCallback(spy, 'OnNewProfile')
 	db.RegisterCallback(spy, 'OnDatabaseShutdown')
@@ -31,10 +34,41 @@ mod:SetScript('OnEvent', function(self, event, name)
 	local options = LibStub('AceDBOptions-3.0'):GetOptionsTable(db)
 	LibStub("AceConfig-3.0"):RegisterOptionsTable(NAME, options)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(NAME, NAME)
-
-	local LibDoppelganger = LibStub('LibDoppelganger-1.0')
+	
 	LibDoppelganger:EnhanceAceDB3(db)
-	LibDoppelganger:EnhanceAceDBOptions3(options)
+	LibDoppelganger:EnhanceAceDBOptions3(options, db)
 	
 	print(NAME, 'loaded')
 end)
+
+-- Ace2 test
+local Waterfall = AceLibrary:HasInstance("Waterfall-1.0") and AceLibrary("Waterfall-1.0")
+local ace2 = AceLibrary('AceAddon-2.0'):new("AceDB-2.0", "AceConsole-2.0")
+ace2:RegisterDB("DoppelgangerTestAce2DB")
+
+function ace2:OnInitialize()
+
+	LibDoppelganger:EnhanceAceDB2(self)
+	local options = AceLibrary('AceDB-2.0'):GetAceOptionsDataTable(self)
+	LibDoppelganger:EnhanceAceDBOptions2(options, self)		
+
+	Waterfall:Register(NAME, 'aceOptions', options, 'title', NAME)
+
+	self:RegisterChatCommand({'/dpgt'}, function()
+		if Waterfall:IsOpen(NAME) then
+			Waterfall:Close(NAME)
+		else
+			Waterfall:Open(NAME)
+		end
+	end)
+end
+
+function ace2:OnProfileDisable(...)
+	self:Print("OnProfileDisable", ...)
+end
+
+function ace2:OnProfileEnable(...)
+	self:Print("OnProfileEnable", ...)
+end
+
+
