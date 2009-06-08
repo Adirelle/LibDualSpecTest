@@ -1,9 +1,10 @@
 ## Interface: 30100
 
-## Title: DoppelgangerTest
-## Notes: LibDoppelgangerTest addon.
+## Title: LibDualSpecTest
+## Notes: LibDualSpec test addon.
 ## Author: Adirelle
-## SavedVariables: DoppelgangerTestAce3DB, DoppelgangerTestAce2DB
-## RequiredDeps: Ace2, Ace3, LibDoppelganger-1.0, Waterfall-1.0
+## SavedVariables: LibDualSpecTestDB
+## RequiredDeps: Ace3, LibDualSpec-1.0
 
-DoppelgangerTest.lua
+LibDualSpecTest.lua
+

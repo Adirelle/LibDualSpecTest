@@ -1,8 +1,8 @@
 
-local LibDoppelganger = LibStub('LibDoppelganger-1.0')
+local LibDualSpec = LibStub('LibDualSpec-1.0')
 
 -- Ace3 test
-local NAME = 'DoppelgangerTest'
+local NAME = 'LibDualSpecTest'
 local ace3 = CreateFrame("Frame", NAME)
 local db
 
@@ -20,8 +20,8 @@ ace3:SetScript('OnEvent', function(self, event, name)
 	if name:lower() ~= NAME:lower() then return end
 	self:UnregisterEvent('ADDON_LOADED')
 	
-	db = LibStub('AceDB-3.0'):New('DoppelgangerTestAce3DB')
-	DoppelgangerTest.db = db
+	db = LibStub('AceDB-3.0'):New('LibDualSpecTestDB')
+	self.db = db
 	db.RegisterCallback(spy, 'OnNewProfile')
 	db.RegisterCallback(spy, 'OnDatabaseShutdown')
 	db.RegisterCallback(spy, 'OnProfileShutdown')
@@ -35,51 +35,7 @@ ace3:SetScript('OnEvent', function(self, event, name)
 	LibStub("AceConfig-3.0"):RegisterOptionsTable(NAME, options)
 	LibStub("AceConfigDialog-3.0"):AddToBlizOptions(NAME, NAME)
 	
-	LibDoppelganger:EnhanceAceDB3(db)
-	LibDoppelganger:EnhanceAceDBOptions3(options, db)
+	LibDualSpec:EnhanceDatabase(db, NAME)
+	LibDualSpec:EnhanceOptions(options, db)
 end)
-
--- Ace2 test
-local Waterfall = AceLibrary:HasInstance("Waterfall-1.0") and AceLibrary("Waterfall-1.0")
-local ace2 = AceLibrary('AceAddon-2.0'):new("AceDB-2.0", "AceConsole-2.0")
-_G.DoppelgangerTestAce2 = ace2
-
-ace2:RegisterDB("DoppelgangerTestAce2DB")
-
-ace2.options = {
-	name = NAME,
-	type = 'group',
-	args = {
-		config = {
-			name = 'Config',
-			desc = 'Bla !',
-			type = 'execute',
-			guiHidden = true,
-			func = function()
-				if Waterfall:IsOpen(NAME) then
-					Waterfall:Close(NAME)
-				else
-					Waterfall:Open(NAME)
-				end
-			end
-		}
-	},	
-}
-
-function ace2:OnInitialize()
-	LibDoppelganger:EnhanceAceDB2(self)	
-	LibDoppelganger:EnhanceAceDBOptions2(self.options, self)		
-	
-	self:RegisterChatCommand('/dpgt', self.options) 
-	Waterfall:Register(NAME, 'aceOptions', self.options, 'title', NAME)	
-end
-
-function ace2:OnProfileDisable(...)
-	self:Print("OnProfileDisable", ...)
-end
-
-function ace2:OnProfileEnable(...)
-	self:Print("OnProfileEnable", ...)
-end
-
 
